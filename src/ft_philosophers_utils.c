@@ -11,27 +11,26 @@
 /* ************************************************************************** */
 #include "ft_philosophers.h"
 
-int	ft_strncmp(char *str_1, char *str_2, int n)
+int	ft_strncmp(char *s1, char *s2, int n)
 {
 	int	i;
 
 	i = 0;
-	while (*str_1 && *str_2 && i < n)
+	while (*s1 && *s2 && i < n)
 	{
-		if (*str_1 != *str_2)
-			return (*(unsigned char *)str_1 - *(unsigned char *)str_2);
-		++str_1;
-		++str_2;
-		++i;
+		if (*s1 != *s2)
+			return (*(unsigned char *)s1 - *(unsigned char *)s2);
+		++s1;
+		++s2;
+		i++;
 	}
 	if (i == n)
 	{
-		--str_1;
-		--str_2;
+		--s1;
+		--s2;
 	}
-	return (*(unsigned char *)str_1 - *(unsigned char *)str_2);
+	return (*(unsigned char *)s1 - *(unsigned char *)s2);
 }
-
 
 int	ft_atoi(const char *str)
 {
@@ -62,12 +61,12 @@ int	ft_atoi(const char *str)
 
 int	ft_strlen(char *s)
 {
-	int	ret;
+	int	len;
 
-	ret = 0;
+	len = 0;
 	while (*s++)
-		++ret;
-	return (ret);
+		len++;
+	return (len);
 }
 
 void	ft_usleep(unsigned int n)
@@ -94,7 +93,10 @@ long	ft_get_time(void)
 	gettimeofday(&s_tv, 0);
 	time = s_tv.tv_sec * 1000 + s_tv.tv_usec / 1000;
 	if (first == 0)
+	{
 		first = time;
+		return (0);
+	}
 	else
 		time = time - first;
 	return (time);

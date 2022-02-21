@@ -18,11 +18,13 @@ NAME = philosophers
 all:			$(NAME)
 
 philosophers :		$(OBJ)
-				$(CC) ${CFLAGS} ${OBJ} -o $(NAME) -lpthread 
+				@$(CC) ${CFLAGS} ${OBJ} -o $(NAME) -lpthread 
+				@printf "\n[$(GREEN)generated$(WHITE)] philosophers 😴 \n"
 
 obj/%.o:src/%.c
 				@mkdir -p  obj
-				$(CC) -o   $@ -c $< -lpthread  $(CFLAGS)
+				@$(CC) -o   $@ -c $< -lpthread  $(CFLAGS)
+			
 
 clean:
 				@rm -f $(OBJ) core

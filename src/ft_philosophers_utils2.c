@@ -12,19 +12,18 @@
 
 #include "ft_philosophers.h"
 
-
-void	*ft_die(void *arg)
+void	*ft_check(void *arg)
 {
 	long	time;
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
-	while (*philo->can_eat && philo->serving != 0)
+	while (*philo->can_eat && philo->times != 0)
 	{
 		time = ft_get_time();
-		if (time - philo->last_ate > philo->lifespan)
+		if (time - philo->last_ate > philo->lifetime)
 		{
-			ft_print_status(time, philo, "has died");
+			ft_print_status(time, philo, "died");
 			*philo->can_eat = 0;
 			break ;
 		}
@@ -42,9 +41,9 @@ void	*ft_live(void *arg)
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
-	while (*philo->can_eat && philo->serving != 0)
+	while (*philo->can_eat && philo->times != 0)
 	{
-		philo->serving -= 1;
+		philo->times -= 1;
 		ft_print_status(0, philo, "is thinking");
 		pthread_mutex_lock(philo->fork_1);
 		ft_print_status(0, philo, "has taken a fork");
@@ -85,4 +84,3 @@ void	ft_print_status(long time, t_philo *philo, char *status)
 		printf("%ld %d %s\n", time, philo->number, status);
 	pthread_mutex_unlock(philo->print);
 }
-

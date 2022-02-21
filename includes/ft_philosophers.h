@@ -12,37 +12,38 @@
 
 #ifndef FT_PHILOSOPHERS_H
 # define FT_PHILOSOPHERS_H
+
+#include <pthread.h>
+#include <sys/time.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <signal.h>
 #include <stdio.h>
-#include <pthread.h>
-#include <sys/time.h>
 
 typedef struct s_philo
 {
 	int				number;
 	int				hold_fork_1;
 	int				hold_fork_2;
-	int				lifespan;
+	int				lifetime;
 	int				eat_time;
 	int				sleep_time;
-	int				serving;
+	int				times;
 	int				*can_eat;
 	long			last_ate;
-	pthread_t		philo_live;
+	pthread_t		philo;
 	pthread_mutex_t	*print;
 	pthread_mutex_t	*fork_1;
 	pthread_mutex_t	*fork_2;
-	pthread_t		philo_die;
+	pthread_t		check;
 }					t_philo;
 
 
 typedef struct s_rules
 {
-	int				nb_philo;
-	int				is_open;
 	t_philo			*philos;
+	int				nb_philo;
+	int				start;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	print;
 }					t_rules;
@@ -60,7 +61,7 @@ void	ft_usleep(unsigned int n);
 long	ft_get_time(void);
 
 /*ft_philosophers_utils2.c*/
-void	*ft_die(void *arg);
+void	*ft_check(void *arg);
 void	*ft_live(void *arg);
 void	ft_print_status(long ts, t_philo *philo, char *status);
 
