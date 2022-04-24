@@ -10,65 +10,58 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_PHILOSOPHERS_H
-# define FT_PHILOSOPHERS_H
-#include <unistd.h>
-#include <stdlib.h>
-#include <signal.h>
-#include <stdio.h>
-#include <pthread.h>
-#include <sys/time.h>
+#ifndef FT_PHILOSOPHERS_BONUS_H
+# define FT_PHILOSOPHERS_BONUS_H
+
+# include <pthread.h>
+# include <sys/time.h>
+# include <unistd.h>
+# include <stdlib.h>
+# include <signal.h>
+# include <stdio.h>
+# include <semaphore.h>
+# include <sys/wait.h>
+# include <fcntl.h> 
 
 typedef struct s_philo
 {
-	int				seat;
-	int				has_fork_1;
-	int				has_fork_2;
-	int				lifespan;
-	int				serving;
+	int				number;
+	int				lifetime;
 	int				eat_time;
 	int				sleep_time;
-	int				*can_eat;
+	int				times;
+	int				pid;
 	long			last_ate;
-	pthread_t		philo_die;
-	pthread_t		philo_live;
-	pthread_mutex_t	*print;
-	pthread_mutex_t	*fork_1;
-	pthread_mutex_t	*fork_2;
+	sem_t			*forks;
+	sem_t			*print;
+	pthread_t		philo;
+	pthread_t		check;
 }					t_philo;
 
-
-typedef struct s_table
+typedef struct s_rules
 {
-	int				nb_philo;
-	int				is_open;
+	int				nb_philos;
 	t_philo			*philos;
-	pthread_mutex_t	*forks;
-	pthread_mutex_t	print;
-}					t_table;
+	sem_t			*forks;
+	sem_t			*print;
+}					t_rules;
 
-/*ft_philosophers*/
-void	ft_clear(t_table *table, char *str);
-int		init_philo(char **av, t_table *table, int i);
-int		pthread_helper(char **argv, void *f, t_table *table);
+/*ft_philosophers_bonus.c*/
+void	ft_clear(t_rules *rules, char *str);
+void	ft_init(char **av, t_rules *rules, int i);
+void	ft_waipid(t_rules *rules);
+int		ft_p_thread(char **argv, t_rules *rules);
 
-/*ft_philosophers_utils.c*/
+/*ft_philosophers_utils_bonus.c*/
 int		ft_strlen(char *s);
 int		ft_strncmp(char *str_1, char *str_2, int n);
 int		ft_atoi(const char *str);
 void	ft_usleep(unsigned int n);
+long	ft_get_time(void);
 
-/*ft_philosophers_utils2.c*/
-void	*die(void *arg);
-void	*live(void *arg);
+/*ft_philosophers_utils2_bonus.c*/
+void	*ft_check(void *arg);
+void	*ft_live(void *arg);
 void	ft_print_status(long ts, t_philo *philo, char *status);
-long	get_ts(void);
-
-/*pointeurs sur fonction*/
-typedef int	(*t_mutex_init)(pthread_mutex_t *, const pthread_mutexattr_t *);
-typedef int	(*t_create)(pthread_t *, const pthread_attr_t *, \
-	void *(*start_routine)(void *), void *);
-typedef int	(*t_join)(pthread_t, void **value_ptr);
-typedef int	(*t_mutex_destroy)(pthread_mutex_t *);
 
 #endif
